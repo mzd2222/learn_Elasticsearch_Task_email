@@ -22,6 +22,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  *    1. 主类添加 @EnableScheduling
  *    2. 要使用异步任务的方法上添加@Scheduled
  *    3. cron定时表达式
+ *
+ * 4.邮件任务
  */
 @EnableScheduling  //开启定时任务
 @EnableAsync       //开启异步任务

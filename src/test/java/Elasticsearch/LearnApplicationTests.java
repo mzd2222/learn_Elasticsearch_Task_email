@@ -10,15 +10,20 @@ import io.searchbox.core.SearchResult;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 @SpringBootTest
 class LearnApplicationTests {
 
-    @Autowired
-    JestClient jestClient;
+    /*    测试testBookRepository     */
 
     @Autowired
     BookRepository bookRepository;
@@ -44,6 +49,11 @@ class LearnApplicationTests {
     }
 
 
+
+/*    测试jest *************        */
+
+    @Autowired
+    JestClient jestClient;
 
     //用jest给es中保存索引
     @Test
@@ -85,6 +95,47 @@ class LearnApplicationTests {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+
+/*  *******************  测试邮箱******          */
+//测试邮箱
+
+    @Autowired
+    JavaMailSender javaMailSender;
+
+//    简单邮件
+    @Test
+    void testMail(){
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setSubject("这是标题");
+        mailMessage.setText("这首邮件内容");
+
+        mailMessage.setTo("496190329@qq.com");
+        mailMessage.setFrom("2659277880@qq.com");
+
+        javaMailSender.send(mailMessage);
+    }
+
+//    复杂邮件
+    @Test
+    void testMail2() throws MessagingException {
+        //创建复杂消息邮件
+        MimeMessage message = javaMailSender.createMimeMessage();
+
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+        helper.setSubject("这是标题");
+        helper.setText("<h1 style='color:red'>今天 七点 开年级会</h1>",true);
+
+        helper.setTo("496190329@qq.com");
+        helper.setFrom("2659277880@qq.com");
+
+        //上传文件
+        helper.addAttachment("pom.xml",new File("pom.xml"));
+        helper.addAttachment(".gitignore",new File(".gitignore"));
+
+        javaMailSender.send(message);
 
     }
 
