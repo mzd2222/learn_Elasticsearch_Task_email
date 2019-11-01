@@ -1,6 +1,8 @@
 package Elasticsearch;
 
 import Elasticsearch.Bean.Article;
+import Elasticsearch.Bean.Book;
+import Elasticsearch.Repository.BookRepository;
 import io.searchbox.client.JestClient;
 import io.searchbox.core.Index;
 import io.searchbox.core.Search;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
+import java.util.List;
 
 @SpringBootTest
 class LearnApplicationTests {
@@ -17,7 +20,32 @@ class LearnApplicationTests {
     @Autowired
     JestClient jestClient;
 
-    //给es中保存索引
+    @Autowired
+    BookRepository bookRepository;
+
+    //testBookRepository
+    @Test
+    void testBookRepository(){
+        Book book = new Book();
+        book.setId(2);
+        book.setAuthor("mzd2");
+        book.setName("jia");
+//        bookRepository.save(book);
+        bookRepository.index(book);
+    }
+
+    //测试模糊查询
+    @Test
+    void test22(){
+        List<Book> jia_li = bookRepository.findBookByNameLike("jia");
+        for (Book a:jia_li) {
+            System.out.println(a);
+        }
+    }
+
+
+
+    //用jest给es中保存索引
     @Test
     void contextLoads() {
 
@@ -37,7 +65,6 @@ class LearnApplicationTests {
     }
 
     //测试搜索   全文搜索
-
     @Test
     void search(){
         //创建搜索表达式
